@@ -1,0 +1,8 @@
+.vs/*
+*.vc*
+bin/*
+*.log
+*.dat
+log/*
+Debug/*
+Release/*
