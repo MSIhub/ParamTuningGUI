@@ -1,0 +1,14 @@
+hp_ax: 0.455
+hp_ay: 0.455
+hp_az: 0.01
+hp_vpitch: 0.89
+hp_vroll: 0.89
+hp_vyaw: 0.89
+k_ax: 0.000001
+k_ay: 0.000001
+k_az: 0.000001
+k_vpitch: 1
+k_vroll: 1
+k_vyaw: 1
+lp_ax: 0.44
+lp_ay: 0.44
