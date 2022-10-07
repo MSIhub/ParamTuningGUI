@@ -1,1 +1,1 @@
-### GUI for tuning the parameters of motion cueing algorithm.
+# GUI for tuning the parameters of motion cueing algorithm.
