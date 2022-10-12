@@ -7,6 +7,8 @@
 #include <string>
 #include <fstream>
 
+enum DataInputApp { XPLANE = 0, AIRSIM = 1, MFS22 = 2 };
+
 class file_handler
 {
 private:
@@ -14,8 +16,11 @@ private:
 
 public:
     bool isFileReset;
-    std::map<std::string, double> paramMap;
-    file_handler() :filename("param.yaml"), isFileReset(false) {};
+    DataInputApp inputChoice;
+    std::map<std::string, float> paramMap;
+
+    file_handler() :filename("param.yaml"), isFileReset(false), inputChoice(DataInputApp::XPLANE) {};
+
     void ReadFile();
     void PrintParams();
     void UpdateFile(float, float);
@@ -26,44 +31,54 @@ public:
 };
 
 
-namespace param_limits
+struct parameter
+{   
+    float k_ax;
+    float k_ay;
+    float k_az;
+    float k_vroll;
+    float k_vpitch;
+    float k_vyaw;
+    float hp_ax;
+    float hp_ay;
+    float hp_az;
+    float hp_vroll;
+    float hp_vpitch;
+    float hp_vyaw;
+    float lp_ax;
+    float lp_ay;
+};
+
+namespace param_limit
 {
-    const float lim_k_ax[2] = { 0.00001, 0.00010 }; //min, max
-    const float lim_k_ay[2] = { 0.000005, 0.00002 }; //min, max
-    const float lim_k_az[2] = { 0.0001, 0.0005 }; //min, max
-    const float lim_k_vroll[2] = { 0.175, 0.55 }; //min, max
-    const float lim_k_vpitch[2] = { 0.175, 0.55 }; //min, max
-    const float lim_k_vyaw[2] = { 0.175, 0.55 }; //min, max
-    const float lim_hp_ax[2] = { 0.0070, 0.0086 };
-    const float lim_hp_ay[2] = { 0.0070, 0.0086 };
-    const float lim_hp_az[2] = { 0.0070, 0.0086 };
-    const float lim_hp_vroll[2] = { 0.0200, 0.0255 };
-    const float lim_hp_vpitch[2] = { 0.0200, 0.0255 };
-    const float lim_hp_vyaw[2] = { 0.0085, 0.0094 };
-    const float lim_lp_ax[2] = { 0.0069, 0.0085 };
-    const float lim_lp_ay[2] = { 0.0069, 0.0085 };
-    const float lim_lp_az[2] = { 0.0069, 0.0085 };
+    //Limits
+    const struct parameter min_xplane = { 0.00001f, 0.000005f, 0.0001f, 0.175f, 0.175f, 0.175f, 0.0070f, 0.0070f, 0.0070f, 0.0200f, 0.0200f,  0.0085f, 0.0069f, 0.0069f };
+
+    const struct parameter max_xplane = { 0.00010f, 0.00002f, 0.0005f, 0.55f, 0.55f, 0.55f, 0.0086f, 0.0086f, 0.0086f, 0.0255f, 0.0255f,  0.0094f, 0.0085f , 0.0085f };
+
+    const struct parameter min_airsim = { 0.0000001f, 0.0000001f, 0.0000001f, 1.0f, 1.0f, 1.0f, 0.355f, 0.355f, 0.01f, 0.79f, 0.79f,  0.79f,0.40f, 0.40f };
+
+    const struct parameter max_airsim = { 0.00001f, 0.00001f, 0.00001f, 2.0f,1.3f, 1.3f, 0.555f, 0.555f, 0.01f, 0.91f, 0.91f,  0.91f, 0.46f , 0.46f };
+
+    const struct parameter min_mfs22 = { 0.00001f, 0.000005f, 0.0001f, 0.175f, 0.175f, 0.175f, 0.0070f, 0.0070f, 0.0070f, 0.0200f, 0.0200f,  0.0085f, 0.0069f, 0.0069f };
+
+    const struct parameter max_mfs22 = { 0.00010f, 0.00002f, 0.0005f, 0.55f, 0.55f, 0.55f, 0.0086f, 0.0086f, 0.0086f, 0.0255f, 0.0255f,  0.0094f, 0.0085f , 0.0085f };
+
 }
+
+
+
 
 namespace initial_values
 {
-    static float init_res   = 0.00000f;
-    static float init_smooth= 0.00000f;
-    const float k_ax        = 0.00005f;
-    const float k_ay        = 0.00001f;
-    const float k_az        = 0.00050f;
-    const float k_vroll     = 0.35000f;
-    const float k_vpitch    = 0.35000f;
-    const float k_vyaw      = 0.35000f;
-    const float hp_ax       = 0.00860f;
-    const float hp_ay       = 0.00860f;
-    const float hp_az       = 0.00860f;
-    const float hp_vroll    = 0.02550f;
-    const float hp_vpitch   = 0.02550f;
-    const float hp_vyaw     = 0.00940f;
-    const float lp_ax       = 0.00850f;
-    const float lp_ay       = 0.00850f;
-    const float lp_az       = 0.00850f;
+    static float init_res = 0.00000f;
+    static float init_smooth = 0.00000f;
+    //Ideal/tested values
+    const struct parameter param_ideal_xplane = { 0.00005f, 0.00001f, 0.00050f,  0.35000f, 0.35000f, 0.35000f, 0.00860f, 0.00860f, 0.00860f, 0.02550f, 0.02550f, 0.00940f,0.00850f, 0.00850f };
+
+    const struct parameter param_ideal_airsim = { 0.000001f,  0.000001f,  0.000001f,  2.0f, 1.2f, 1.2f, 0.455f, 0.455f, 0.01f, 0.89f, 0.89f, 0.89f,0.44f, 0.44f };
+
+    const struct parameter param_ideal_mfs22 = { 0.0000889f, 0.00001f, 0.00050f,  0.35000f, 0.35000f, 0.35000f, 0.00860f, 0.00860f, 0.00860f, 0.02550f, 0.02550f, 0.00940f,0.00850f, 0.00850f };
 }
 
 

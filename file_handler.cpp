@@ -1,6 +1,9 @@
 #include "file_handler.h"
 #include <iostream>
 
+
+
+
 void file_handler::ReadFile()
 {
   
@@ -17,7 +20,7 @@ void file_handler::ReadFile()
 	while (param)
 	{
 		std::string key;
-		double value;
+		float value;
 		std::getline(param, key, ':');
 		param >> value;
 		param.get(); // catch empty line
@@ -34,7 +37,7 @@ void file_handler::PrintParams()
 {
     ReadFile();
     ImGui::Begin("Print Parameter");
-    std::map<std::string, double>::iterator itr;
+    std::map<std::string, float>::iterator itr;
 
     for (itr = paramMap.begin(); itr != paramMap.end(); ++itr)
     {
@@ -49,7 +52,7 @@ void file_handler::UpdateFile(float responsiveness, float smoothness)
    
     //Update the paramMap
     UpdateParams(responsiveness, smoothness);
-    std::map<std::string, double>::iterator itr;
+    std::map<std::string, float>::iterator itr;
     //Write the paramMap to file
     std::ofstream param;
     param.open(filename, std::ofstream::out | std::ofstream::trunc);
@@ -73,24 +76,44 @@ void file_handler::UpdateFile(float responsiveness, float smoothness)
 
 void file_handler::UpdateParams(float responsiveness, float smoothness)
 {
+    
+    parameter p_min, p_max;
+    switch (inputChoice)
+    {
+    case XPLANE:
+        p_min = param_limit::min_xplane;
+        p_max = param_limit::max_xplane;
+        break;
+    case AIRSIM:
+        p_min = param_limit::min_airsim;
+        p_max = param_limit::max_airsim;
+        break;
+    case MFS22:
+        p_min = param_limit::min_mfs22;
+        p_max = param_limit::max_mfs22;
+        break;
+    default:
+        p_min = param_limit::min_xplane;
+        p_max = param_limit::max_xplane;
+        break;
+    }
+    
+    paramMap["k_ax"] = mapRangeClamped(responsiveness, 0.0, 1.0, p_min.k_ax, p_max.k_ax);
+    paramMap["k_ay"] = mapRangeClamped(responsiveness, 0.0, 1.0, p_min.k_ay, p_max.k_ay);
+    paramMap["k_az"] = mapRangeClamped(responsiveness, 0.0, 1.0, p_min.k_az, p_max.k_az);
+    paramMap["k_vroll"] = mapRangeClamped(responsiveness, 0.0, 1.0, p_min.k_vroll, p_max.k_vroll);
+    paramMap["k_vpitch"] = mapRangeClamped(responsiveness, 0.0, 1.0, p_min.k_vpitch, p_max.k_vpitch);
+    paramMap["k_vyaw"] = mapRangeClamped(responsiveness, 0.0, 1.0, p_min.k_vyaw, p_max.k_vyaw);
 
-    paramMap["k_ax"] = mapRangeClamped(responsiveness, 0.0, 1.0, param_limits::lim_k_ax[0], param_limits::lim_k_ax[1]);
-    paramMap["k_ay"] = mapRangeClamped(responsiveness, 0.0, 1.0, param_limits::lim_k_ay[0], param_limits::lim_k_ay[1]);
-    paramMap["k_az"] = mapRangeClamped(responsiveness, 0.0, 1.0, param_limits::lim_k_az[0], param_limits::lim_k_az[1]);
-    paramMap["k_vroll"] = mapRangeClamped(responsiveness, 0.0, 1.0, param_limits::lim_k_vroll[0], param_limits::lim_k_vroll[1]);
-    paramMap["k_vpitch"] = mapRangeClamped(responsiveness, 0.0, 1.0, param_limits::lim_k_vpitch[0], param_limits::lim_k_vpitch[1]);
-    paramMap["k_vyaw"] = mapRangeClamped(responsiveness, 0.0, 1.0, param_limits::lim_k_vyaw[0], param_limits::lim_k_vyaw[1]);
+    paramMap["hp_ax"] = mapRangeClamped(smoothness, 0.0, 1.0, p_min.hp_ax, p_max.hp_ax);
+    paramMap["hp_ay"] = mapRangeClamped(smoothness, 0.0, 1.0, p_min.hp_ay, p_max.hp_ay);
+    paramMap["hp_az"] = mapRangeClamped(smoothness, 0.0, 1.0, p_min.hp_az, p_max.hp_az);
+    paramMap["hp_vroll"] = mapRangeClamped(smoothness, 0.0, 1.0, p_min.hp_vroll, p_max.hp_vroll);
+    paramMap["hp_vpitch"] = mapRangeClamped(smoothness, 0.0, 1.0, p_min.hp_vpitch, p_max.hp_vpitch);
+    paramMap["hp_vyaw"] = mapRangeClamped(smoothness, 0.0, 1.0, p_min.hp_vyaw, p_max.hp_vyaw);
 
-    paramMap["hp_ax"] = mapRangeClamped(smoothness, 0.0, 1.0, param_limits::lim_hp_ax[0], param_limits::lim_hp_ax[1]);
-    paramMap["hp_ay"] = mapRangeClamped(smoothness, 0.0, 1.0, param_limits::lim_hp_ay[0], param_limits::lim_hp_ay[1]);
-    paramMap["hp_az"] = mapRangeClamped(smoothness, 0.0, 1.0, param_limits::lim_hp_az[0], param_limits::lim_hp_az[1]);
-    paramMap["hp_vroll"] = mapRangeClamped(smoothness, 0.0, 1.0, param_limits::lim_hp_vroll[0], param_limits::lim_hp_vroll[1]);
-    paramMap["hp_vpitch"] = mapRangeClamped(smoothness, 0.0, 1.0, param_limits::lim_hp_vpitch[0], param_limits::lim_hp_vpitch[1]);
-    paramMap["hp_vyaw"] = mapRangeClamped(smoothness, 0.0, 1.0, param_limits::lim_hp_vyaw[0], param_limits::lim_hp_vyaw[1]);
-
-    paramMap["lp_ax"] = mapRangeClamped(smoothness, 0.0, 1.0, param_limits::lim_lp_ax[0], param_limits::lim_lp_ax[1]);
-    paramMap["lp_ay"] = mapRangeClamped(smoothness, 0.0, 1.0, param_limits::lim_lp_ay[0], param_limits::lim_lp_ay[1]);
-    paramMap["lp_az"] = mapRangeClamped(smoothness, 0.0, 1.0, param_limits::lim_lp_az[0], param_limits::lim_lp_az[1]);
+    paramMap["lp_ax"] = mapRangeClamped(smoothness, 0.0, 1.0, p_min.lp_ax, p_max.lp_ax);
+    paramMap["lp_ay"] = mapRangeClamped(smoothness, 0.0, 1.0, p_min.lp_ay, p_max.lp_ay);
 }
 
 
@@ -99,7 +122,7 @@ void file_handler::ResetFile()
 
     ResetParamMapToIdeal();
 
-    std::map<std::string, double>::iterator itr;
+    std::map<std::string, float>::iterator itr;
     //Write the paramMap to file
     std::ofstream param;
     param.open(filename, std::ofstream::out | std::ofstream::trunc);
@@ -123,21 +146,37 @@ void file_handler::ResetFile()
 
 void file_handler::ResetParamMapToIdeal()
 {
-    paramMap["k_ax"] = initial_values::k_ax;
-    paramMap["k_ay"] = initial_values::k_ay;
-    paramMap["k_az"] = initial_values::k_az;
-    paramMap["k_vroll"] = initial_values::k_vroll;
-    paramMap["k_vpitch"] = initial_values::k_vpitch;
-    paramMap["k_vyaw"] = initial_values::k_vyaw;
-    paramMap["hp_ax"] = initial_values::hp_ax;
-    paramMap["hp_ay"] = initial_values::hp_ay;
-    paramMap["hp_az"] = initial_values::hp_az;
-    paramMap["hp_vroll"] = initial_values::hp_vroll;
-    paramMap["hp_vpitch"] = initial_values::hp_vpitch;
-    paramMap["hp_vyaw"] = initial_values::hp_vyaw;
-    paramMap["lp_ax"] = initial_values::lp_ax;
-    paramMap["lp_ay"] = initial_values::lp_ay;
-    paramMap["lp_az"] = initial_values::lp_az;
+
+    parameter p;
+    switch (inputChoice)
+    {
+    case XPLANE:
+        p = initial_values::param_ideal_xplane;
+        break;
+    case AIRSIM:
+        p = initial_values::param_ideal_airsim;
+        break;
+    case MFS22:
+        p = initial_values::param_ideal_mfs22;
+        break;
+    default:
+        p = initial_values::param_ideal_xplane;
+        break;
+    }
+    paramMap["k_ax"] = p.k_ax;
+    paramMap["k_ay"] = p.k_ay;
+    paramMap["k_az"] = p.k_az;
+    paramMap["k_vroll"] = p.k_vroll;
+    paramMap["k_vpitch"] = p.k_vpitch;
+    paramMap["k_vyaw"] = p.k_vyaw;
+    paramMap["hp_ax"] = p.hp_ax;
+    paramMap["hp_ay"] = p.hp_ay;
+    paramMap["hp_az"] = p.hp_az;
+    paramMap["hp_vroll"] = p.hp_vroll;
+    paramMap["hp_vpitch"] = p.hp_vpitch;
+    paramMap["hp_vyaw"] = p.hp_vyaw;
+    paramMap["lp_ax"] = p.lp_ax;
+    paramMap["lp_ay"] = p.lp_ay;
 }
 
 float mapRangeClamped(float inVal, float minInRange, float maxInRange, float minOutRange, float maxOutRange)

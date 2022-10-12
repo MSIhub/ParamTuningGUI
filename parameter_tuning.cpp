@@ -3,6 +3,37 @@
 void param::RenderUI(file_handler& fh)
 {
     ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
+    
+
+    ImGuiStyle& style = ImGui::GetStyle();
+    style.FrameRounding = 10;
+
+    ImGuiWindowFlags window_flags = 0;
+    window_flags |= ImGuiWindowFlags_NoTitleBar;
+    window_flags |= ImGuiWindowFlags_NoScrollbar;
+    
+    ImGui::Begin("Data input application", NULL, window_flags);
+    static int e = 0;
+    ImGui::RadioButton("X-Plane Flight Sim  ", &e, 0); ImGui::SameLine();
+    ImGui::RadioButton("AirSim Car Sim  ", &e, 1); ImGui::SameLine();
+    ImGui::RadioButton("Microsoft Flight Sim", &e, 2);
+    switch (e)
+    {   
+        case 0:
+            fh.inputChoice = DataInputApp::XPLANE;
+            break;
+        case 1:
+            fh.inputChoice = DataInputApp::AIRSIM;
+            break;
+        case 2:
+            fh.inputChoice = DataInputApp::MFS22;
+            break;
+        default:
+            fh.inputChoice = DataInputApp::XPLANE;
+            break;
+    }
+
+    ImGui::End();
 
     fh.PrintParams();
 
@@ -14,8 +45,8 @@ void param::RenderUI(file_handler& fh)
     ImGui::SameLine(0.0f, 100.0f);
     ImGui::TextColored((ImVec4)ImColor::HSV(0.44f, 0.96f, 1.0f), "Set the slider value and press update parameter");
 
-    initial_values::init_res = mapRangeClamped(fh.paramMap["k_ax"], param_limits::lim_k_ax[0], param_limits::lim_k_ax[1], 0.0, 1.0);
-    initial_values::init_smooth = mapRangeClamped(fh.paramMap["hp_ax"], param_limits::lim_hp_ax[0], param_limits::lim_hp_ax[1], 0.0, 1.0);
+    initial_values::init_res = mapRangeClamped(fh.paramMap["k_ax"], param_limit::min_xplane.k_ax, param_limit::max_xplane.k_ax, 0.0, 1.0);
+    initial_values::init_smooth = mapRangeClamped(fh.paramMap["hp_ax"], param_limit::min_xplane.hp_ax, param_limit::max_xplane.hp_ax, 0.0, 1.0);
 
     static float values[2] = { initial_values::init_res,initial_values::init_smooth };
 
@@ -60,7 +91,7 @@ void param::RenderUI(file_handler& fh)
 
     ImGui::NewLine();
     ImGui::SameLine(0.0f, 180.0f);
-    bool updateButtonPressed = ImGui::Button("Update Parameter File", ImVec2(300.f, 50.0f));
+    bool updateButtonPressed = ImGui::Button("Update parameter file", ImVec2(300.f, 50.0f));
     if (updateButtonPressed)
     {
         fh.UpdateFile(values[0], values[1]);
@@ -71,7 +102,7 @@ void param::RenderUI(file_handler& fh)
 
     ImGui::NewLine();
     ImGui::SameLine(0.0f, 180.0f);
-    bool resetButtonPressed = ImGui::Button("Reset Parameter File", ImVec2(300.f, 50.0f));
+    bool resetButtonPressed = ImGui::Button("Reset parameter file", ImVec2(300.f, 50.0f));
     if (resetButtonPressed)
     {
         fh.ResetFile();
@@ -93,7 +124,7 @@ void param::RenderUI(file_handler& fh)
     ImGui::Begin("Motion Cueing Process");
     ImGui::NewLine();
     ImGui::SameLine(0.0f, 250.0f);
-    bool cueingStartPressed = ImGui::Button("Start Cueing", ImVec2(300.f, 50.0f));
+    bool cueingStartPressed = ImGui::Button("Start motion cueing", ImVec2(300.f, 50.0f));
     if (cueingStartPressed)
     {
         cueing_handler::startCueingProcess();
@@ -102,10 +133,8 @@ void param::RenderUI(file_handler& fh)
 
     ImGui::BeginChild("outer_child", ImVec2(0, ImGui::GetFontSize() * 3.0f), true);
     if(cueingCounter>0)
-        ImGui::BulletText("@msihub : Cueing Started");
+        ImGui::BulletText("@msihub : Cueing Started [%d]", cueingCounter);
     ImGui::EndChild();
 
     ImGui::End();
-
-
 }
