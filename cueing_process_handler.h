@@ -4,9 +4,12 @@
 #pragma once
 #include <windows.h>
 
+
+
 namespace cueing_handler
 {
 	void startCueingProcess();
+	void startCueingWithDataExtractionFromMFS();
 
 }
 #endif

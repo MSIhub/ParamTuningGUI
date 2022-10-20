@@ -98,6 +98,14 @@ void file_handler::UpdateParams(float responsiveness, float smoothness)
         break;
     }
     
+    //Ensure the values are with the limit to avoid param mapped to values greater or lower.
+    if (responsiveness > 1.0f) responsiveness = 1.0f;
+    if (responsiveness < 0.0f) responsiveness = 0.0f;
+
+    if (smoothness > 1.0f) smoothness = 1.0f;
+    if (smoothness < 0.0f) smoothness = 0.0f;
+    
+
     paramMap["k_ax"] = mapRangeClamped(responsiveness, 0.0, 1.0, p_min.k_ax, p_max.k_ax);
     paramMap["k_ay"] = mapRangeClamped(responsiveness, 0.0, 1.0, p_min.k_ay, p_max.k_ay);
     paramMap["k_az"] = mapRangeClamped(responsiveness, 0.0, 1.0, p_min.k_az, p_max.k_az);
@@ -138,6 +146,7 @@ void file_handler::ResetFile()
         param << (itr->first) << ": " << itr->second << std::endl;
 
     param.close();
+
 
     isFileReset = true;
     return;

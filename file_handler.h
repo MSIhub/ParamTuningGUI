@@ -56,13 +56,13 @@ namespace param_limit
 
     const struct parameter max_xplane = { 0.00010f, 0.00002f, 0.0005f, 0.55f, 0.55f, 0.55f, 0.0086f, 0.0086f, 0.0086f, 0.0255f, 0.0255f,  0.0094f, 0.0085f , 0.0085f };
 
-    const struct parameter min_airsim = { 0.0000001f, 0.0000001f, 0.0000001f, 1.0f, 1.0f, 1.0f, 0.355f, 0.355f, 0.01f, 0.79f, 0.79f,  0.79f,0.40f, 0.40f };
+    const struct parameter min_airsim = { 0.000000001f, 0.000000001f, 0.000000001f, 1.5f, 0.8f, 0.8f, 0.355f, 0.355f, 0.005f, 0.65f, 0.65f, 0.65f, 0.34f, 0.34f };
 
-    const struct parameter max_airsim = { 0.00001f, 0.00001f, 0.00001f, 2.0f,1.3f, 1.3f, 0.555f, 0.555f, 0.01f, 0.91f, 0.91f,  0.91f, 0.46f , 0.46f };
+    const struct parameter max_airsim = { 0.00000001f, 0.00000001f, 0.00000001f, 2.5f, 1.5f, 1.5f, 0.555f, 0.555f, 0.05f, 0.95f, 0.95f, 0.95f, 0.54f, 0.54f };
 
-    const struct parameter min_mfs22 = { 0.00001f, 0.000005f, 0.0001f, 0.175f, 0.175f, 0.175f, 0.0070f, 0.0070f, 0.0070f, 0.0200f, 0.0200f,  0.0085f, 0.0069f, 0.0069f };
+    const struct parameter min_mfs22 = { 0.0000001f, 0.0000001f, 0.0000001f, 0.80f, 0.80f, 0.80f, 0.400f, 0.400f, 0.400f, 0.65f,  0.65f,  0.65f, 0.30f, 0.30f };
 
-    const struct parameter max_mfs22 = { 0.00010f, 0.00002f, 0.0005f, 0.55f, 0.55f, 0.55f, 0.0086f, 0.0086f, 0.0086f, 0.0255f, 0.0255f,  0.0094f, 0.0085f , 0.0085f };
+    const struct parameter max_mfs22 = { 0.000001f, 0.000001f, 0.000001f, 1.2f, 1.2f, 1.2f, 0.555f, 0.555f, 0.555f, 0.92f, 0.92f, 0.92f, 0.45f, 0.45f };
 
 }
 
@@ -76,9 +76,9 @@ namespace initial_values
     //Ideal/tested values
     const struct parameter param_ideal_xplane = { 0.00005f, 0.00001f, 0.00050f,  0.35000f, 0.35000f, 0.35000f, 0.00860f, 0.00860f, 0.00860f, 0.02550f, 0.02550f, 0.00940f,0.00850f, 0.00850f };
 
-    const struct parameter param_ideal_airsim = { 0.000001f,  0.000001f,  0.000001f,  2.0f, 1.2f, 1.2f, 0.455f, 0.455f, 0.01f, 0.89f, 0.89f, 0.89f,0.44f, 0.44f };
+    const struct parameter param_ideal_airsim = { 0.000000001f, 0.000000001f, 0.000000001f, 2.0f, 1.2f, 1.2f, 0.455f, 0.455f, 0.01f, 0.89f, 0.89f, 0.89f, 0.44f, 0.44f };
 
-    const struct parameter param_ideal_mfs22 = { 0.0000889f, 0.00001f, 0.00050f,  0.35000f, 0.35000f, 0.35000f, 0.00860f, 0.00860f, 0.00860f, 0.02550f, 0.02550f, 0.00940f,0.00850f, 0.00850f };
+    const struct parameter param_ideal_mfs22 = { 0.0000005f, 0.0000005f, 0.0000005f, 0.95f, 0.95f, 0.95f, 0.455f, 0.455f, 0.455f, 0.89f, 0.89f, 0.89f, 0.44f, 0.44f };
 }
 
 

@@ -96,6 +96,9 @@ void param::RenderUI(file_handler& fh)
     {
         fh.UpdateFile(values[0], values[1]);
         updateCounter++;
+
+        initial_values::init_res = mapRangeClamped(fh.paramMap["k_ax"], param_limit::min_xplane.k_ax, param_limit::max_xplane.k_ax, 0.0, 1.0);
+        initial_values::init_smooth = mapRangeClamped(fh.paramMap["hp_ax"], param_limit::min_xplane.hp_ax, param_limit::max_xplane.hp_ax, 0.0, 1.0);
     }
 
     ImGui::Spacing();
@@ -105,8 +108,14 @@ void param::RenderUI(file_handler& fh)
     bool resetButtonPressed = ImGui::Button("Reset parameter file", ImVec2(300.f, 50.0f));
     if (resetButtonPressed)
     {
+        
         fh.ResetFile();
         resetCounter++;
+
+        initial_values::init_res = mapRangeClamped(fh.paramMap["k_ax"], param_limit::min_xplane.k_ax, param_limit::max_xplane.k_ax, 0.0, 1.0);
+        initial_values::init_smooth = mapRangeClamped(fh.paramMap["hp_ax"], param_limit::min_xplane.hp_ax, param_limit::max_xplane.hp_ax, 0.0, 1.0);
+        
+
     }
 
 
@@ -127,8 +136,27 @@ void param::RenderUI(file_handler& fh)
     bool cueingStartPressed = ImGui::Button("Start motion cueing", ImVec2(300.f, 50.0f));
     if (cueingStartPressed)
     {
-        cueing_handler::startCueingProcess();
-        cueingCounter++;
+        
+        switch (fh.inputChoice)
+        {
+        case XPLANE:
+            cueing_handler::startCueingProcess();
+            cueingCounter++;
+            break;
+        case AIRSIM:
+            cueing_handler::startCueingProcess();
+            cueingCounter++;
+            break;
+        case MFS22:
+            cueing_handler::startCueingWithDataExtractionFromMFS();
+            cueingCounter++;
+            break;
+        default:
+            cueing_handler::startCueingProcess();
+            cueingCounter++;
+            break;
+        }
+        
     }
 
     ImGui::BeginChild("outer_child", ImVec2(0, ImGui::GetFontSize() * 3.0f), true);
